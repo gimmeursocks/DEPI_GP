@@ -14,13 +14,9 @@ import (
 )
 
 var (
-	// ErrHttpGenericMessage that is returned in general case, details should be logged in such case
 	ErrHttpGenericMessage = echo.NewHTTPError(http.StatusInternalServerError, "something went wrong, please try again later")
-
-	// ErrWrongCredentials indicates that login attempt failed because of incorrect login or password
-	ErrWrongCredentials = echo.NewHTTPError(http.StatusUnauthorized, "username or password is invalid")
-
-	jwtSecret = "myfancysecret"
+	ErrWrongCredentials   = echo.NewHTTPError(http.StatusUnauthorized, "username or password is invalid")
+	jwtSecret             = "foo"
 )
 
 func main() {
@@ -45,31 +41,16 @@ func main() {
 	e := echo.New()
 	e.Logger.SetLevel(gommonlog.INFO)
 
-	if zipkinURL := os.Getenv("ZIPKIN_URL"); len(zipkinURL) != 0 {
-		e.Logger.Infof("init tracing to Zipkit at %s", zipkinURL)
-
-		if tracedMiddleware, tracedClient, err := initTracing(zipkinURL); err == nil {
-			e.Use(echo.WrapMiddleware(tracedMiddleware))
-			userService.Client = tracedClient
-		} else {
-			e.Logger.Infof("Zipkin tracer init failed: %s", err.Error())
-		}
-	} else {
-		e.Logger.Infof("Zipkin URL was not provided, tracing is not initialised")
-	}
-
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 
-	// Route => handler
 	e.GET("/version", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Auth API, written in Go\n")
 	})
 
 	e.POST("/login", getLoginHandler(userService))
 
-	// Start server
 	e.Logger.Fatal(e.Start(hostport))
 }
 
@@ -79,10 +60,9 @@ type LoginRequest struct {
 }
 
 func getLoginHandler(userService UserService) echo.HandlerFunc {
-	f := func(c echo.Context) error {
+	return func(c echo.Context) error {
 		requestData := LoginRequest{}
-		decoder := json.NewDecoder(c.Request().Body)
-		if err := decoder.Decode(&requestData); err != nil {
+		if err := json.NewDecoder(c.Request().Body).Decode(&requestData); err != nil {
 			log.Printf("could not read credentials from POST body: %s", err.Error())
 			return ErrHttpGenericMessage
 		}
@@ -94,12 +74,10 @@ func getLoginHandler(userService UserService) echo.HandlerFunc {
 				log.Printf("could not authorize user '%s': %s", requestData.Username, err.Error())
 				return ErrHttpGenericMessage
 			}
-
 			return ErrWrongCredentials
 		}
-		token := jwt.New(jwt.SigningMethodHS256)
 
-		// Set claims
+		token := jwt.New(jwt.SigningMethodHS256)
 		claims := token.Claims.(jwt.MapClaims)
 		claims["username"] = user.Username
 		claims["firstname"] = user.FirstName
@@ -107,7 +85,6 @@ func getLoginHandler(userService UserService) echo.HandlerFunc {
 		claims["role"] = user.Role
 		claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
 
-		// Generate encoded token and send it as response.
 		t, err := token.SignedString([]byte(jwtSecret))
 		if err != nil {
 			log.Printf("could not generate a JWT token: %s", err.Error())
@@ -118,6 +95,4 @@ func getLoginHandler(userService UserService) echo.HandlerFunc {
 			"accessToken": t,
 		})
 	}
-
-	return echo.HandlerFunc(f)
 }

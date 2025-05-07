@@ -33,14 +33,14 @@ Following users are hardcoded for you:
 
 ## Building and running
 
-1. Update the dependencies with [glide](https://github.com/Masterminds/glide)
+1. Update the dependencies
 ```
-glide up
+go mod tidy
 ```
 2. Compile a binary and then run it
 ```
 go build
-AUTH_API_PORT=8000 USERS_API_ADDRESS=http://users-api:8082 JWT_SECRET=foo ./auth-api
+AUTH_API_PORT=8000 USERS_API_ADDRESS=http://localhost:8083 JWT_SECRET=foo ./auth-api
 ```
 
 ## Usage
