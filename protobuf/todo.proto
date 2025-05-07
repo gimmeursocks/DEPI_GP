@@ -1,0 +1,36 @@
+syntax = "proto3";
+package todo_service;
+
+message Todo {
+    string id = 1;
+    string title = 2;
+    string username = 3;
+}
+
+message NewTodo {
+    string title = 1;
+    string username = 2;
+}
+
+message TodoIdentifier {
+    string id = 1;
+    string username = 2;
+}
+
+message TodoCreator {
+    string username = 1;
+}
+
+message TodosList {
+    repeated Todo todos  = 1;
+}
+
+message SuccessResponse {}
+
+service TodoService {
+    rpc GetTodos(TodoCreator) returns (TodosList) {}
+    rpc CreateTodo(NewTodo) returns (Todo) {}
+    rpc GetTodo(TodoIdentifier) returns (Todo) {}
+    rpc EditTodo(Todo) returns (Todo) {}
+    rpc DeleteTodo(TodoIdentifier) returns (SuccessResponse) {}
+}

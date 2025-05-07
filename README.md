@@ -1,38 +1,53 @@
-# DEPI DevOps Capstone Project
+## microservices-example
+This is a todo app based on microservice architecture. I made this project while learning about Docker, Kubernetes, gRPC, Service Meshes.
 
-This is an example of web application comprising of several components communicating to each other. In other words, this is an example of microservice app. Why is it better than many other examples? Well, because these microservices are written in different languages. This approach gives you flexibility for running experiments in polyglot environment.
+## Architecture
+Here is an overview of the application architecture.
 
-The app itself is a simple TODO app that additionally authenticates users. I planned to add some admin functionality, but decided to cut the scope and add it later if needed.
+![Architecture Overview](./readme-assets/architecture.jpg)
 
-## Components
+| Service | Language, Framework | Description |
+| --- | --- | --- |
+| [frontend](./frontend/) | HTML, CSS, JavaScript | This is a simple web app written in plain HTML, CSS, JavaScript. It's docker image uses `apache httpd` to serve the web app. |
+| [api-service](./api-service/) | Python, FastAPI | This service exposes RESTful APIs that the `frontend` communicates with. It doesn't have much business logic but instead further communicates with `auth-service` and `todo-service` over `gRPC` to handle the requests. The protobuf definitions can be found [here](./protobuf/). |
+| [auth-service](./auth-service/) | Go | This service handles all the authentication, registration, etc. logic. It stores all its data in a `PostgreSQL` database. |
+| [todo-service](./todo-service/) | TypeScript | This service basically handles all the CRUD operations of todos. It stores all its data in a `MongoDB` database. |
 
-1. [Frontend](/frontend) part is a Javascript application, provides UI. Created with [VueJS](http://vuejs.org)
-2. [Auth API](/auth-api) is written in Go and provides authorization functionality. Generates JWT tokens to be used with other APIs.
-3. [TODOs API](/todos-api) is written with NodeJS, provides CRUD functionality ove user's todo records. Also, it logs "create" and "delete" operations to Redis queue, so they can be later processed by [Log Message Processor](/log-message-processor).
-4. [Users API](/users-api) is a Spring Boot project written in Java. Provides user profiles. Does not provide full CRUD for simplicity, just getting a single user and all users.
-5. [Log Message Processor](/log-message-processor) is a very short queue processor written in Python. It's sole purpose is to read messages from Redis queue and print them to stdout
+<!-- ## Running the app
+### Building Docker Images
+To run this app first you'll need to build the docker images for all the services.
 
-Take a look at the components diagram that describes them and their interactions.
-![microservice-app-example](https://user-images.githubusercontent.com/1905821/34918427-a931d84e-f952-11e7-85a0-ace34a2e8edb.png)
+#### frontend
+- `cd frontend`
+- `docker build -t todo-app-frontend:v1 .`
 
-## Use cases
+#### auth-service
+- `cd auth-service`
+- `docker build -t todo-app-auth-service:v1 .`
 
-- Evaluate various instruments (monitoring, tracing, you name it): how easy they integrate, do they have any bugs with different languages, etc.
+#### todo-service
+- `cd todo-service`
+- `docker build -t todo-app-todo-service:v1 .`
 
-<!-- ## How to start
+#### api-service
+- `cd api-service`
+- `docker build -t todo-app-api-service:v1 .`
 
-The easiest way is to use `docker-compose`:
+### Deploying on kubernetes cluster
+Now, you can deploy the app on your kubernetes cluster.
 
-```docker
-docker-compose up --build
-```
+#### Create a namespace called todo-app
+- `kubectl create ns todo-app`
 
-Then go to <http://127.0.0.1:8080> for web UI. -->
+#### Apply the manifests
+- `kubectl apply -f kubernetes/` -->
 
-## Source Code
+## Screenshots
+### Todo App
 
-Based on this repo <https://github.com/elgris/microservice-app-example>
+| Home Page | Login Page |
+| --- | --- |
+| ![Home Page](./readme-assets/app-main.png) | ![Login Page](./readme-assets/app-login.png) |
 
-## License
-
-MIT
+### Services Graph by Kiali in Istio Service Mesh
+![Kiali Graph](./readme-assets/kiali-graph.png)
