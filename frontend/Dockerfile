@@ -6,5 +6,8 @@ RUN apk add --no-cache lighttpd
 # Copy files to the default lighttpd document root
 COPY . /var/www/localhost/htdocs
 
+# Expose the app port
+EXPOSE 80
+
 # Start lighttpd in foreground mode (-D) with the default configuration
 CMD ["lighttpd", "-D", "-f", "/etc/lighttpd/lighttpd.conf"]
