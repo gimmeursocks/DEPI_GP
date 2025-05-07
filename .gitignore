@@ -24,6 +24,8 @@
 
 # Go workspace file
 go.work
+go.mod
+go.sum
 
 ### Go Patch ###
 /vendor/
