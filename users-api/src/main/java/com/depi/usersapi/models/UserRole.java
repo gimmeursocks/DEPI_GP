@@ -1,4 +1,4 @@
-package com.elgris.usersapi.models;
+package com.depi.usersapi.models;
 
 public enum UserRole {
     USER("user"),

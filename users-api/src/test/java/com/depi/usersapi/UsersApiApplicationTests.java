@@ -1,4 +1,4 @@
-package com.elgris.usersapi;
+package com.depi.usersapi;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

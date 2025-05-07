@@ -1,9 +1,9 @@
-package com.elgris.usersapi.models;
+package com.depi.usersapi.models;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "USERS")
 public class User {
 
     @Id

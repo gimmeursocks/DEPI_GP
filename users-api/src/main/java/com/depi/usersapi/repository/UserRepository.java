@@ -1,11 +1,10 @@
-package com.elgris.usersapi.repository;
+package com.depi.usersapi.repository;
 
-import com.elgris.usersapi.models.User;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
+import com.depi.usersapi.models.User;
 
-public interface UserRepository extends CrudRepository<User, Long> {
+public interface UserRepository extends CrudRepository<User, String> {
     User findOneByUsername(String username);
     User findByUsername(String username);
     User getByUsername(String username);

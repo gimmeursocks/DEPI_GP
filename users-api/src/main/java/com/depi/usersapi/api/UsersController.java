@@ -1,11 +1,12 @@
-package com.elgris.usersapi.api;
+package com.depi.usersapi.api;
 
-import com.elgris.usersapi.models.User;
-import com.elgris.usersapi.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
+
+import com.depi.usersapi.models.User;
+import com.depi.usersapi.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedList;

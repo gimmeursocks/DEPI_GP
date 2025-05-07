@@ -1,6 +1,5 @@
-package com.elgris.usersapi.configuration;
+package com.depi.usersapi.configuration;
 
-import com.elgris.usersapi.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -9,6 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+import com.depi.usersapi.security.JwtAuthenticationFilter;
+
+@SuppressWarnings("deprecation")
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true)
 class HttpSecurityConfiguration {

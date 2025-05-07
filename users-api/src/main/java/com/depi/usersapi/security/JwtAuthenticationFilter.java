@@ -1,4 +1,4 @@
-package com.elgris.usersapi.security;
+package com.depi.usersapi.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
