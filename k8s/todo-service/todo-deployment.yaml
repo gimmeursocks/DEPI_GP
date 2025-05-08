@@ -1,7 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: todo-service
+  name: todo-service-deployment
+  namespace: todo-app
+  labels:
+    app: todo-service
 spec:
   replicas: 1
   selector:
@@ -16,10 +19,10 @@ spec:
         - name: todo-container
           image: gimmeursocks/todo-service:latest
           ports:
-            - containerPort: 8001
+            - containerPort: 3006
           env:
             - name: DB_HOST
-              value: "mongo"
+              value: mongo
             - name: DB_PORT
               value: "27017"
             - name: DB_NAME

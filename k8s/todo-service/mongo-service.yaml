@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: mongo
+  namespace: todo-app
 spec:
   selector:
     app: mongo
@@ -9,4 +10,4 @@ spec:
     - protocol: TCP
       port: 27017
       targetPort: 27017
-  clusterIP: None  # needed for StatefulSet
+  clusterIP: None # Needed for StatefulSet

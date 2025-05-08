@@ -1,7 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-service
+  name: api-service-deployment
+  namespace: todo-app
+  labels:
+    app: api-service
 spec:
   replicas: 1
   selector:
@@ -16,7 +19,7 @@ spec:
         - name: api-container
           image: gimmeursocks/api-service:latest
           ports:
-            - containerPort: 8002
+            - containerPort: 8000
           env:
             - name: AUTH_SERVICE_URL
               value: auth-service:3000

@@ -2,19 +2,25 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: postgres-pv
+  labels:
+    type: local
+    app: auth-database
 spec:
+  storageClassName: manual
   capacity:
     storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /mnt/data/postgres
+    path: "/mnt/data/authdb"
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: postgres-pvc
+  namespace: todo-app
 spec:
+  storageClassName: manual
   accessModes:
     - ReadWriteOnce
   resources:

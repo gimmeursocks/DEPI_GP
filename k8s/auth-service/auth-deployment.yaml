@@ -1,7 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-service
+  name: auth-service-deployment
+  namespace: todo-app
+  labels:
+    app: auth-service
 spec:
   replicas: 1
   selector:
@@ -16,10 +19,10 @@ spec:
         - name: auth-container
           image: gimmeursocks/auth-service:latest
           ports:
-            - containerPort: 8000
+            - containerPort: 3005
           env:
             - name: DB_HOST
-              value: "postgres"
+              value: postgres
             - name: DB_PORT
               value: "5432"
             - name: DB_NAME
