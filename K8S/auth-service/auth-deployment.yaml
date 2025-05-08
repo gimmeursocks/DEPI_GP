@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth-container
-          image: gimmeursocks/auth-service
+          image: gimmeursocks/auth-service:latest
           ports:
             - containerPort: 8000
           env:
