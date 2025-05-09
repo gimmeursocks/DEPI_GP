@@ -12,7 +12,7 @@ export class DatabaseClient {
 
     private getConnectionUri() {
         const { DB_USERNAME, DB_PASSWORD, DB_HOST, DB_PORT } = process.env;
-        return `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}?retryWrites=true&writeConcern=majority`;
+        return `mongodb://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/?retryWrites=false&writeConcern=majority&tls=true&tlsAllowInvalidCertificates=true`;
     }
 
     async initialize() {
