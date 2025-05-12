@@ -1,3 +1,5 @@
+const API_BASE_URL = window.location.origin + "${API_BASE_URL}/";
+
 function getTasks() {
     document.getElementById('mainArea').innerHTML = '<span class="badge badge-primary badge-pill todo-available-tasks-text"> Available Tasks </span>';
     $.ajax({

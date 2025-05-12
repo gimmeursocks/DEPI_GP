@@ -19,8 +19,6 @@ function displayInfoToast(message) {
     });
 }
 
-const API_BASE_URL = 'http://ab2881915a55643cc937f4121e3f8421-1218404674.eu-central-1.elb.amazonaws.com:8000/';
-
 function logout() {
     localStorage.removeItem('token');
     window.location.href = '/login';
