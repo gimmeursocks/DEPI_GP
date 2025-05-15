@@ -63,6 +63,7 @@ pipeline {
         stage('Deploy to EKS') {
             steps {
                 sh '''
+                    echo ">>> Change kubeconfig"
                     aws eks update-kubeconfig --region $AWS_REGION --name depi-eks-cluster
 
                     echo ">>> Creating namespace"
@@ -73,13 +74,15 @@ pipeline {
                     wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
                     kubectl create configmap documentdb-ca --from-file=global-bundle.pem -n todo-app --dry-run=client -o yaml | kubectl apply -f -
                     kubectl create configmap rds-ca --from-file=rds-combined-ca-bundle.pem -n todo-app --dry-run=client -o yaml | kubectl apply -f -
-
+                    
+                    echo ">>> Creating docker secret"
                     kubectl get secret regcred -n todo-app || kubectl create secret docker-registry regcred \
                         --docker-server=328986589640.dkr.ecr.eu-central-1.amazonaws.com \
                         --docker-username=AWS \
                         --docker-password=$(aws ecr get-login-password --region eu-central-1) \
                         --namespace=todo-app
 
+                    echo ">>> Installing/Upgrading helm"
                     helm upgrade --install todo-app k8s/todo-app -n todo-app
                 '''
             }
