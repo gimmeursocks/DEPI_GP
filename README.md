@@ -13,35 +13,6 @@ Here is an overview of the application architecture.
 | [auth-service](./auth-service/) | Go | This service handles all the authentication, registration, etc. logic. It stores all its data in a `PostgreSQL` database. |
 | [todo-service](./todo-service/) | TypeScript | This service basically handles all the CRUD operations of todos. It stores all its data in a `MongoDB` database. |
 
-<!-- ## Running the app
-### Building Docker Images
-To run this app first you'll need to build the docker images for all the services.
-
-#### frontend
-- `cd frontend`
-- `docker build -t todo-app-frontend:v1 .`
-
-#### auth-service
-- `cd auth-service`
-- `docker build -t todo-app-auth-service:v1 .`
-
-#### todo-service
-- `cd todo-service`
-- `docker build -t todo-app-todo-service:v1 .`
-
-#### api-service
-- `cd api-service`
-- `docker build -t todo-app-api-service:v1 .`
-
-### Deploying on kubernetes cluster
-Now, you can deploy the app on your kubernetes cluster.
-
-#### Create a namespace called todo-app
-- `kubectl create ns todo-app`
-
-#### Apply the manifests
-- `kubectl apply -f kubernetes/` -->
-
 ## Screenshots
 ### Todo App
 
