@@ -64,7 +64,7 @@ def get_user(token: str):
             detail="invalid token"
         )
 
-@app.post("/auth/login", response_model=AuthToken, tags=["auth"])
+@app.post("/api/auth/login", response_model=AuthToken, tags=["auth"])
 def login(user: LoginUser):
     try:
         token = auth_service_stub.LoginUser(auth_pb2.UserCredentials(username=user.username, password=user.password))
@@ -72,7 +72,7 @@ def login(user: LoginUser):
     except grpc.RpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
-@app.post("/auth/register", response_model=AuthToken, tags=["auth"])
+@app.post("/api/auth/register", response_model=AuthToken, tags=["auth"])
 def register(user: RegisterUser):
     try:
         token = auth_service_stub.RegisterUser(auth_pb2.UserRegistrationForm(username=user.username, password=user.password, name=user.name))
@@ -80,7 +80,7 @@ def register(user: RegisterUser):
     except grpc.RpcError as e:
         raise HTTPException(status_code=400, detail=e.details())
 
-@app.get("/auth/profile", response_model=UserProfile, tags=["auth"])
+@app.get("/api/auth/profile", response_model=UserProfile, tags=["auth"])
 def profile(token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     return {
@@ -88,13 +88,13 @@ def profile(token: HTTPAuthorizationCredentials = Security(security)):
         "username": user.username,
     }
 
-@app.get("/todos/", response_model=List[Todo], tags=["todos"])
+@app.get("/api/todos/", response_model=List[Todo], tags=["todos"])
 def get_todos(token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     todo_list_response = todo_service_stub.GetTodos(todo_pb2.TodoCreator(username=user.username))
     return list(map(lambda todo_obj: { "id": todo_obj.id, "title": todo_obj.title }, todo_list_response.todos))
 
-@app.post("/todos/", status_code=201, response_model=Todo, tags=["todos"])
+@app.post("/api/todos/", status_code=201, response_model=Todo, tags=["todos"])
 def create_todo(new_todo: NewTodo, token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     try:
@@ -106,7 +106,7 @@ def create_todo(new_todo: NewTodo, token: HTTPAuthorizationCredentials = Securit
     except Exception as e:
         raise HTTPException(status_code=400, detail=e.details())
 
-@app.get("/todos/{id}", response_model=Todo, tags=["todos"])
+@app.get("/api/todos/{id}", response_model=Todo, tags=["todos"])
 def get_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     try:
@@ -118,7 +118,7 @@ def get_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
     except:
         raise HTTPException(status_code=404, detail="not found")
 
-@app.put("/todos/{id}", response_model=Todo, tags=["todos"])
+@app.put("/api/todos/{id}", response_model=Todo, tags=["todos"])
 def update_todo(id: str, todo: Todo, token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     try:
@@ -130,7 +130,7 @@ def update_todo(id: str, todo: Todo, token: HTTPAuthorizationCredentials = Secur
     except Exception as e:
         raise HTTPException(status_code=400, detail=e.details())
 
-@app.delete("/todos/{id}", status_code=204, tags=["todos"])
+@app.delete("/api/todos/{id}", status_code=204, tags=["todos"])
 def delete_todo(id: str, token: HTTPAuthorizationCredentials = Security(security)):
     user = get_user(token.credentials)
     try:
